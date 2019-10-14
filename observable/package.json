@@ -1,0 +1,14 @@
+{
+  "name": "8c838dc72579d811",
+  "main": "d/8c838dc72579d811.js",
+  "version": "161.0.0",
+  "homepage": "https://observablehq.com/d/8c838dc72579d811",
+  "author": {
+    "name": "knowyourselves",
+    "url": "https://observablehq.com/@knowyourselves"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4"
+  }
+}
