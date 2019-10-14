@@ -1,7 +1,7 @@
 const parse_name = (name) => name.split(" ").join("-")
 
 // Función que crea el gráfico. Recibe la url del json, el tamaño y el tipo.
-const create = (data, diameter, type) => {
+const create_bubble = (data, diameter, type) => {
     // Adaptamos el dataset
     const dataset = {
       children: data.slice(0, data.length).map(d => {
@@ -114,12 +114,18 @@ const create_bar = (data, type) => {
 
 }
 
-const decision_tree = 'https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/stats_decision_tree.csv'
-const random_forest = 'https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/stats_random_forest.csv'
-d3.csv(decision_tree).then(tree_data => {
-  d3.csv(random_forest).then(forest_data => {
-    create_bubble(tree_data, 300, 'tree')
-    create_bubble(forest_data, 300, 'forest')
 
-  })
-})
+const main = async () => {
+  const decision_tree = 'https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/stats_decision_tree.csv'
+  const random_forest = 'https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/stats_random_forest.csv'
+  const real = 'https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/stats_test.csv'
+
+  tree_data = await d3.csv(decision_tree)
+  forest_data = await d3.csv(random_forest)
+  real_data = await d3.csv(real)
+
+  create_bubble(tree_data, 300, 'left')
+  create_bubble(forest_data, 300, 'right')
+}
+
+main()
