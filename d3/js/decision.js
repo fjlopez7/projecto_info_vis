@@ -23,20 +23,21 @@ const create = (url, diameter, type) => {
     nodes = d3.hierarchy(dataset).sum(d => d.Count)
 
     // Creamos el SVG
-    svg = d3.select(`span#${type}`)
+    const svg = d3.select(`span#${type}`)
       .append('svg')
       .attr('width', diameter)
       .attr('height', diameter)
       .attr('class', 'bubble');
-
+    
     // Creamos los nodos
     node = svg.selectAll('.node')
       .data(bubble(nodes).descendants())
       .enter()
-      .filter(d => !d.children) // Esto ignora los agrupamientos generales (comentar para ver a que me refiero)
+      .filter(d => !d.children && d.r) // Esto ignora los agrupamientos generales (comentar para ver a que me refiero)
       .append('g')
-      .attr('class', d => `node ${parse_name(d.data.Name)}`)  // Parseamos el nombre y lo asignamos como clase
       .attr('transform', d => `translate(${d.x},${d.y})`)
+    
+    console.log(node);
 
     // Les damso título (tooltip)
     node.append('title')
@@ -46,14 +47,15 @@ const create = (url, diameter, type) => {
     node.append('circle')
       .attr('r', d => d.r)
       .style('fill', (d, i) => color(i))
+      .attr('class', d => `node ${parse_name(d.data.Name)}`)  // Parseamos el nombre y lo asignamos como clase
       .on('mouseover', d => {
-        svg.select(`g.${parse_name(d.data.Name)} circle`)
+        svg.select(`.${parse_name(d.data.Name)}`)
           .transition()
             .duration(100)
             .attr('r', d.r * 1.5)
       })
       .on('mouseout', d => {
-        svg.select(`g.${parse_name(d.data.Name)} circle`)
+        svg.select(`.${parse_name(d.data.Name)}`)
           .transition()
             .duration(100)
             .attr('r', d.r)
@@ -79,4 +81,6 @@ const create = (url, diameter, type) => {
 }
 
 const decision_tree = 'https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/stats_decision_tree.csv'
-create(decision_tree, 500, 'tree')
+const random_forest = 'https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/stats_random_forest.csv'
+create(decision_tree, 300, 'tree')
+create(random_forest, 300, 'forest')
