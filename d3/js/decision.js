@@ -1,9 +1,8 @@
 const parse_name = (name) => name.split(" ").join("-")
 
 // Función que crea el gráfico. Recibe la url del json, el tamaño y el tipo.
-const create = (url, diameter, type) => {
-  d3.csv(url).then(data => {
-    // Adaptamos el
+const create = (data, diameter, type) => {
+    // Adaptamos el dataset
     const dataset = {
       children: data.slice(0, data.length).map(d => {
         return { Name: d.genre, Count: d.numberclassified }
@@ -108,10 +107,19 @@ const create = (url, diameter, type) => {
       .attr('font-family', 'Gill Sans', 'Gill Sans MT')
       .attr('font-size', d => 10) // Debería ser dinámico
       .attr('fill', 'white');
-  })
+}
+
+
+const create_bar = (data, type) => {
+
 }
 
 const decision_tree = 'https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/stats_decision_tree.csv'
 const random_forest = 'https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/stats_random_forest.csv'
-create(decision_tree, 300, 'tree')
-create(random_forest, 300, 'forest')
+d3.csv(decision_tree).then(tree_data => {
+  d3.csv(random_forest).then(forest_data => {
+    create_bubble(tree_data, 300, 'tree')
+    create_bubble(forest_data, 300, 'forest')
+
+  })
+})
