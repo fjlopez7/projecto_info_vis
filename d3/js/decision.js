@@ -9,11 +9,12 @@ const parse_dataset_bubble = (data, type) => {
 }
 
 const parse_dataset_bar = (data, type) => {
-  return [
-    { Metric: "Precision", Score: data.precision, Type: type },
-    { Metric: "Recall", Score: data.recall, Type: type },
-    { Metric: 'F1-Score', Score: data['f1-score'], Type: type }
-  ]
+  return {
+    Type: type,
+    "Precision": data.precision,
+    "Recall": data.recall,
+    'F1-Score': data['f1-score']
+  }
 }
 
 // Crea el pack creator dado un diametro
@@ -35,13 +36,12 @@ const exit_transition = transition => {
     .attr('r', '0')
     .remove()
 }
+// Creamos la escala de color
+const color_bubble = d3.scaleOrdinal(d3.schemeCategory10);
 
 // Creamos svg izquierdo y derecho
-const svg_left = d3.select('#left').append('svg').attr('id', 'left')
-const svg_right = d3.select('#right').append('svg').attr('id', 'right')
-
-// Creamos la escala de color
-const color = d3.scaleOrdinal(d3.schemeCategory10);
+const svg_left = d3.select('#idiom1-left').append('svg').attr('id', 'left')
+const svg_right = d3.select('#idiom1-right').append('svg').attr('id', 'right')
 
 // Función que crea el gráfico. Recibe la url del json, el tamaño y el tipo.
 const create_bubble = (data, diameter, svg, type, other) => {
@@ -66,71 +66,36 @@ const create_bubble = (data, diameter, svg, type, other) => {
     bar_svg = 'left' == svg.attr('id') ? svg_right : svg_left
     if (!clicked) {
       clicked = true
-      index = data.findIndex(other => other.genre == d.data.Name)
-      create_bar(data[index], diameter, bar_svg, 'bar')
+      index_1 = data.findIndex(other => other.genre == d.data.Name)
+      index_2 = data.findIndex(data => data.genre == d.data.Name)
+      destroy_buble(bar_svg)
+      create_bar(bar_svg, diameter, data[index_1], 'DecisionTree', other[index_2], 'RandomForest')
     }
     else {
       new_type = 'forest' == type ? 'tree' : 'forest'
       clicked = false
       destroy_bar(bar_svg)
       create_bubble(other, diameter, bar_svg, new_type, data)
-      mouseout(d)
     }
   }
 
   // Definimos las funciones mouseout y mouseover
   const mouseout = d => {
     if (clicked) return
-    svg.select('.highlight circle')
-      .transition(`RemoveHighlight-${d.data.Name}`)
-      .duration(100)
-      .attr('r', d.r)
-      .on('end', _ => svg.select('.highlight').remove())
+    // Deshacemos highlight
+    svg_left.select(`.${parse_name(d.data.Name)}`)
+      .style('stroke', '')
+    svg_right.select(`.${parse_name(d.data.Name)}`)
+      .style('stroke', '')
   }
 
   const mouseover = d => {
     if (clicked) return
-    // Creamos nuevo componente gráico encima
-    highligth_g = svg
-      .append('g')
-      .attr('transform', `translate(${d.x}, ${d.y})`)
-      .attr('class', 'highlight')
-
-    // Agregamos circulo visible
-    highligth_g.append('circle')
-      .attr('r', d.r)
-      .attr('class', 'node')
-      .style('fill', color(d.data.Name))
-      .transition(`AddHighlight-${d.data.Name}`)
-      .duration(100)
-      .attr('r', d.r * 1.5)
-
-    highligth_g.append('text')
-      .attr('class', 'node')
-      .attr('dy', '.2em')
-      .style('text-anchor', 'middle')
-      .text(d.data.Name)
-      .attr('font-family', 'sans-serif')
-      .attr('font-size', d => 10) // Debería ser dinámico
-      .attr('fill', 'white');
-
-    highligth_g.append('text')
-      .attr('class', 'node')
-      .attr('dy', '1.3em')
-      .style('text-anchor', 'middle')
-      .text(d.data.Count)
-      .attr('font-family', 'Gill Sans', 'Gill Sans MT')
-      .attr('font-size', d => 10) // Debería ser dinámico
-      .attr('fill', 'white');
-
-    // Agregamos circulo invisible
-    highligth_g.append('circle')
-      .attr('class', 'node')
-      .style('opacity', 0)
-      .attr('r', d.r * 1.5)
-      .on('mouseout', _ => mouseout(d))
-      .on('click', _ => click(d))
-
+    // Hacemos Highlight
+    svg_left.select(`.${parse_name(d.data.Name)}`)
+      .style('stroke', 'red')
+    svg_right.select(`.${parse_name(d.data.Name)}`)
+      .style('stroke', 'red')
   }
 
   // Creamos los nodos
@@ -149,27 +114,15 @@ const create_bubble = (data, diameter, svg, type, other) => {
     .attr('class', 'node')
     .attr('transform', d => `translate(${d.x},${d.y})`)
 
-  // Les damos título (tooltip)
-  node.append('title')
-    .text(d => `${d.data.Name}: ${d.data.Count}`)
-
   // Coloreamos los círculos
   node.append('circle')
+    .attr('class', d => parse_name(d.data.Name))
     .transition()
     .delay(100)
     .attr('r', d => d.r)
     .style('fill', (d) => {
-      return color(d.data.Name)
+      return color_bubble(d.data.Name)
     })
-
-  // Agregamos circulos transparentes
-  node.append('circle')
-    .attr('fill', 'white')
-    .style('opacity', '0')
-    .on('mouseover', mouseover)
-    .transition()
-    .attr('class', 'cover node')
-    .attr('r', d => d.r)
 
   // Escribimos el texto y el tamaño
   node.append('text')
@@ -189,70 +142,124 @@ const create_bubble = (data, diameter, svg, type, other) => {
     .attr('font-size', d => 10) // Debería ser dinámico
     .attr('fill', 'white')
 
+  // Agregamos circulos transparentes
+  node.append('circle')
+    .style('opacity', '0')
+    .on('mouseover', mouseover)
+    .on('mouseout', mouseout)
+    .on('click', click)
+    .attr('class', 'cover node')
+    .attr('r', d => d.r)
+
 }
 
-const create_bar = (data, diameter, svg, type) => {
-  // Parseamos la data
-  data = parse_dataset_bar(data, type)
-
-  // Eliminamos nodos del barchart
+const destroy_buble = (svg) => {
   svg.selectAll('.node')
-    .transition()
-    .call(exit_transition)
+    .transition().call(exit_transition)
     .remove()
-
-  var margin = { top: 30, right: 30, bottom: 70, left: 60 },
-    width = diameter - margin.left - margin.right,
-    height = diameter - margin.top - margin.bottom;
-
-  // Cambiamos el svg
-  barContainer = svg.attr('width', diameter)
-    .attr('height', diameter)
-    .append('g')
-    .attr('transform', `translate(${margin.left}, ${margin.top})`)
-
-  // Creamos la escala del axis x
-  x_axis = d3.scaleBand()
-    .range([0, width])
-    .domain(data.map(d => d.Metric))
-    .padding(0.2);
-
-  // Creamos el contenedor gráfico
-  x_container = barContainer.append('g')
-    .attr('transform', `translate(0, ${height})`)
-    .call(d3.axisBottom(x_axis))
-    .attr('class', 'x-axis')
-    .selectAll('text')
-    .attr('transform', 'translate(-10,0)rotate(-45)')
-    .style('text-anchor', 'end');
-
-  // Creamos la escala del axis y
-  y_axis = d3.scaleLinear()
-    .domain([0, 1])
-    .range([height, 0]);
-
-  // Creamos el contenedor gráfico
-  y_container = barContainer.append('g')
-    .call(d3.axisLeft(y_axis))
-    .attr('class', 'y-axis')
-
-  // Bars
-  barContainer.selectAll("myBar")
-    .data(data, d => d.Type)
-    .enter()
-    .append("rect")
-    .attr("x", d => x_axis(d.Metric))
-    .attr("y", d => y_axis(d.Score))
-    .attr("width", x_axis.bandwidth())
-    .attr("height", d => height - y_axis(d.Score))
-    .attr("fill", "#69b3a2")
 }
 
-const destroy_bar = (svg) => {
-  svg.selectAll('g')
+
+const create_bar = (svg, diameter, data_1, type_1, data_2, type_2) => {
+  height = diameter
+  width = diameter
+  margin = { top: 10, right: 10, bottom: 20, left: 40 }
+
+  data = [parse_dataset_bar(data_1, type_1), parse_dataset_bar(data_2, type_2)]
+  console.log(data)
+
+  groupKey = 'Type'
+  keys = ['Precision', 'Recall', 'F1-Score']
+
+  color = d3.scaleOrdinal()
+    .range(["#98abc5", "#8a89a6", "#7b6888"])
+
+  x0 = d3.scaleBand()
+    .domain(['DecisionTree', 'RandomForest'])
+    .rangeRound([margin.left, width - margin.right])
+    .paddingInner(0.1)
+
+  x1 = d3.scaleBand()
+    .domain(keys)
+    .rangeRound([0, x0.bandwidth()])
+    .padding(0.05)
+
+  y = d3.scaleLinear()
+    .domain([0, 1]).nice()
+    .rangeRound([height - margin.bottom, margin.top])
+
+  xAxis = g => g
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x0).tickSizeOuter(0))
+    .call(g => g.select(".domain").remove())
+
+  yAxis = g => g
+    .attr("transform", `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y).ticks(null, "s"))
+    .call(g => g.select(".domain").remove())
+    .call(g => g.select(".tick:last-of-type text").clone()
+      .attr("x", 3)
+      .attr("text-anchor", "start")
+      .attr("font-weight", "bold")
+      .text(data.y))
+
+  legend = svg => {
+    const g = svg
+      .attr("transform", `translate(${width},0)`)
+      .attr("text-anchor", "end")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 10)
+      .selectAll("g")
+      .data(color.domain().slice().reverse())
+      .join("g")
+      .attr("transform", (d, i) => `translate(0,${i * 20})`);
+
+    g.append("rect")
+      .attr("x", -19)
+      .attr("width", 19)
+      .attr("height", 19)
+      .attr("fill", color);
+
+    g.append("text")
+      .attr("x", -24)
+      .attr("y", 9.5)
+      .attr("dy", "0.35em")
+      .text(d => d);
+  }
+
+  svg.attr('width', width).attr('height', height)
+  svg = svg.append('g').attr('id', 'barchart')
+
+  svg.append("g")
+    .selectAll("g")
+    .data(data)
+    .join("g")
+    .attr("transform", d => `translate(${x0(d[groupKey])},0)`)
+    .selectAll("rect")
+    .data(d => keys.map(key => ({ key, value: d[key] })))
+    .join("rect")
+    .attr("x", d => x1(d.key))
+    .attr("y", d => y(d.value))
+    .attr("width", x1.bandwidth())
+    .attr("height", d => y(0) - y(d.value))
+    .attr("fill", d => color(d.key));
+
+  svg.append("g")
+    .call(xAxis);
+
+  svg.append("g")
+    .call(yAxis);
+
+  svg.append("g")
+    .call(legend);
+}
+
+destroy_bar = (svg) => {
+  svg.selectAll('#barchart')
     .transition()
-      .duration(200)
-      .style('opacity', '0')
+    .duration(200)
+    .style('opacity', '0')
+    .remove()
 }
 
 const main = async () => {
@@ -264,8 +271,8 @@ const main = async () => {
   forest_data = await d3.csv(random_forest)
   real_data = await d3.csv(real)
 
-  create_bubble(tree_data, 300, svg_left, 'tree', forest_data)
-  create_bubble(forest_data, 300, svg_right, 'forest', tree_data)
+  create_bubble(tree_data, 450, svg_left, 'tree', forest_data)
+  create_bubble(forest_data, 450, svg_right, 'forest', tree_data)
 }
 
 main()
