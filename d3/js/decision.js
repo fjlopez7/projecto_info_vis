@@ -1,3 +1,5 @@
+const parse_name = (name) => name.split(" ").join("-")
+
 
 // Función que crea el gráfico. Recibe la url del json, el tamaño y el tipo.
 const create = (url, diameter, type) => {
@@ -33,7 +35,7 @@ const create = (url, diameter, type) => {
       .enter()
       .filter(d => !d.children) // Esto ignora los agrupamientos generales (comentar para ver a que me refiero)
       .append('g')
-      .attr('class', 'node')
+      .attr('class', d => `node ${parse_name(d.data.Name)}`)  // Parseamos el nombre y lo asignamos como clase
       .attr('transform', d => `translate(${d.x},${d.y})`)
 
     // Les damso título (tooltip)
@@ -44,6 +46,18 @@ const create = (url, diameter, type) => {
     node.append('circle')
       .attr('r', d => d.r)
       .style('fill', (d, i) => color(i))
+      .on('mouseover', d => {
+        svg.select(`g.${parse_name(d.data.Name)} circle`)
+          .transition()
+            .duration(100)
+            .attr('r', d.r * 1.5)
+      })
+      .on('mouseout', d => {
+        svg.select(`g.${parse_name(d.data.Name)} circle`)
+          .transition()
+            .duration(100)
+            .attr('r', d.r)
+      })
 
     // Escribimos el texto y el tamaño
     node.append('text')
@@ -64,5 +78,5 @@ const create = (url, diameter, type) => {
   })
 }
 
-const filepath = 'https://raw.githubusercontent.com/KnowYourselves/Infovis-T02-Dataset/master/stats_decision_forest.csv';
-create(filepath, 500, 'decision')
+const decision_tree = 'https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/stats_decision_tree.csv'
+create(decision_tree, 500, 'tree')
