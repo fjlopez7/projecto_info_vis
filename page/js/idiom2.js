@@ -5,7 +5,7 @@
   const MARGIN = { TOP: 30, BOTTOM: 30, LEFT: 20, RIGHT: 20 };
 
   // Definimos dimensiones del svg
-  const HEIGHT = 1000
+  const HEIGHT = 600
   const WIDTH = 1000
 
   // Definimos dimensiones del svg considerando margenes
@@ -26,48 +26,73 @@
       .attr('height', HEIGHT)
       .append('g')
       .attr('transform', `translate(${MARGIN.LEFT}, ${MARGIN.TOP})`);
-      
-    tree = d3.tree().size(orientation.size);
-    data = tree(d3.hierarchy(dataset));
 
-    const nodes = data.descendants();
+    tree = d3.tree()
+      .size(orientation.size)
+    data = tree(d3.hierarchy(dataset))
+
+    const nodes = data.descendants().map(node => {
+      node.id = i
+      i += 1
+      return node
+    });
     const links = data.links();
 
     // Creamos cada link
-    containerTree
+    tree_links = containerTree
       .selectAll('.link')
       .data(links)
       .enter()
-      .append('path')
-      .attr('class', d => {
-        return 'link id-' + d.source.data.id + '-' + d.target.data.id;
+
+    tree_links.append('path')
+      .attr('id', d => `id-${d.source.id}-${d.target.id}`)
+      .attr('d', link => {
+        if (link.source.x > link.target.x) {
+          return `
+            M ${link.target.x} ${link.target.y}
+            C ${link.target.x} ${(link.source.y + link.target.y) / 2}
+              ${link.source.x} ${(link.target.y + link.source.y) / 2} 
+              ${link.source.x} ${link.source.y}
+          `
+        } else {
+          return `
+            M ${link.source.x} ${link.source.y}
+            C ${link.source.x} ${(link.target.y + link.source.y) / 2} 
+              ${link.target.x} ${(link.source.y + link.target.y) / 2}
+              ${link.target.x} ${link.target.y}
+          `
+        }
       })
-      .attr('d', d => {
-        return (
-          'M' +
-          d.target.x +
-          ',' +
-          orientation.y(d.target) +
-          'C' +
-          d.target.x +
-          ',' +
-          (orientation.y(d.target) + orientation.y(d.source)) / 2 +
-          ' ' +
-          d.source.x +
-          ',' +
-          (orientation.y(d.target) + orientation.y(d.source)) / 2 +
-          ' ' +
-          d.source.x +
-          ',' +
-          orientation.y(d.source)
-        );
-      })
-      .style('opacity', 0)
       .style('fill', 'none')
       .style('stroke', 'gray')
+      .style('stroke-width', '3px')
+      .style('opacity', 0)
       .transition()
       .duration(800)
       .style('opacity', 1)
+
+    tree_links
+      .append('text')
+      .style('font-size', 12)
+      .attr('dy', -5)
+      .attr('dx', -5)
+      .append('textPath')
+      .attr('xlink:href', link => `#id-${link.source.id}-${link.target.id}`)
+      .attr('startOffset', link => {
+        if (link.source.x > link.target.x) {
+          return `${2 / (link.source.height + 3) * 50}%`
+        } else { 
+          return `${2 / (link.source.depth + 2) * 50}%`
+        }
+      })
+      .text(link => {
+        data = link.source.data.name.split(' ')
+        if (link.source.x < link.target.x) {
+          return `${data[0]} ${data[1]} ${Number(data[2]).toFixed(2)}`
+        }
+        console.log(link)
+        return `${Number(data[2]).toFixed(2)} ${data[1]} ${data[0]}`
+      })
 
     // Creamos cada nodo
     var node = containerTree
@@ -77,9 +102,7 @@
       .append('circle');
 
     node.attr('class', d => {
-      node_class = `node id-${i}`
-      d.id = i
-      i += 1
+      node_class = `node id-${d.id}`
       return node_class
     })
       .attr('r', 0)
@@ -88,14 +111,15 @@
       .style('fill', '#ef5350')
       .transition()
       .duration(600)
-      .attr('r', 5);
+      .attr('r', 10);
   }
 
 
   const main = async () => {
-    dataset = await d3.json('https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/data/trees/decision_tree.json')
+    dataset = await d3.json('https://raw.githubusercontent.com/fjlopez7/proyecto_info_vis/master/data/trees/decision_tree_4.json')
     create_tree(dataset)
   }
 
   main()
 })()
+

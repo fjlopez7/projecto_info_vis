@@ -1,0 +1,115 @@
+{
+    "name": "track_id > -16.562000274658203",
+    "children": [
+        {
+            "name": "title > -9.671070098876953",
+            "children": [
+                {
+                    "name": "artist_name > 11.667747497558594",
+                    "children": [
+                        {
+                            "name": "loudness > 359.32688903808594",
+                            "children": [
+                                {
+                                    "name": "10 of dance and electronica, 0 of jazz and blues, 0 of punk, 0 of metal, 5 of classic pop and rock, 0 of classical, 0 of folk, 1 of soul and reggae, 1 of pop, 0 of hip-hop"
+                                },
+                                {
+                                    "name": "7 of dance and electronica, 1 of jazz and blues, 3 of punk, 3 of metal, 69 of classic pop and rock, 0 of classical, 15 of folk, 16 of soul and reggae, 7 of pop, 0 of hip-hop"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "track_id > -10.180500030517578",
+                            "children": [
+                                {
+                                    "name": "10 of dance and electronica, 5 of jazz and blues, 1 of punk, 0 of metal, 31 of classic pop and rock, 1 of classical, 16 of folk, 18 of soul and reggae, 13 of pop, 3 of hip-hop"
+                                },
+                                {
+                                    "name": "9 of dance and electronica, 8 of jazz and blues, 6 of punk, 0 of metal, 54 of classic pop and rock, 1 of classical, 64 of folk, 6 of soul and reggae, 2 of pop, 1 of hip-hop"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "genre > 49.47711181640625",
+                    "children": [
+                        {
+                            "name": "artist_name > 21.953452110290527",
+                            "children": [
+                                {
+                                    "name": "0 of dance and electronica, 0 of jazz and blues, 17 of punk, 4 of metal, 2 of classic pop and rock, 0 of classical, 0 of folk, 0 of soul and reggae, 0 of pop, 0 of hip-hop"
+                                },
+                                {
+                                    "name": "0 of dance and electronica, 0 of jazz and blues, 0 of punk, 0 of metal, 5 of classic pop and rock, 0 of classical, 0 of folk, 0 of soul and reggae, 0 of pop, 0 of hip-hop"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "loudness > 240.3913803100586",
+                            "children": [
+                                {
+                                    "name": "15 of dance and electronica, 11 of jazz and blues, 4 of punk, 18 of metal, 41 of classic pop and rock, 1 of classical, 4 of folk, 4 of soul and reggae, 0 of pop, 0 of hip-hop"
+                                },
+                                {
+                                    "name": "2 of dance and electronica, 3 of jazz and blues, 11 of punk, 7 of metal, 88 of classic pop and rock, 0 of classical, 17 of folk, 19 of soul and reggae, 3 of pop, 3 of hip-hop"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "genre > 24.765165328979492",
+            "children": [
+                {
+                    "name": "loudness > 285.9620056152344",
+                    "children": [
+                        {
+                            "name": "loudness > 550.6346435546875",
+                            "children": [
+                                {
+                                    "name": "0 of dance and electronica, 4 of jazz and blues, 0 of punk, 0 of metal, 0 of classic pop and rock, 8 of classical, 0 of folk, 0 of soul and reggae, 0 of pop, 0 of hip-hop"
+                                },
+                                {
+                                    "name": "9 of dance and electronica, 18 of jazz and blues, 0 of punk, 0 of metal, 1 of classic pop and rock, 1 of classical, 9 of folk, 3 of soul and reggae, 0 of pop, 0 of hip-hop"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "title > -16.00712299346924",
+                            "children": [
+                                {
+                                    "name": "1 of dance and electronica, 8 of jazz and blues, 0 of punk, 0 of metal, 9 of classic pop and rock, 4 of classical, 32 of folk, 0 of soul and reggae, 0 of pop, 0 of hip-hop"
+                                },
+                                {
+                                    "name": "4 of dance and electronica, 0 of jazz and blues, 0 of punk, 2 of metal, 5 of classic pop and rock, 0 of classical, 0 of folk, 1 of soul and reggae, 0 of pop, 0 of hip-hop"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "track_id > -33.5625",
+                    "children": [
+                        {
+                            "name": "0 of dance and electronica, 0 of jazz and blues, 0 of punk, 0 of metal, 0 of classic pop and rock, 10 of classical, 0 of folk, 0 of soul and reggae, 0 of pop, 0 of hip-hop"
+                        },
+                        {
+                            "name": "track_id > -35.13750076293945",
+                            "children": [
+                                {
+                                    "name": "0 of dance and electronica, 0 of jazz and blues, 0 of punk, 0 of metal, 0 of classic pop and rock, 0 of classical, 2 of folk, 0 of soul and reggae, 0 of pop, 0 of hip-hop"
+                                },
+                                {
+                                    "name": "2 of dance and electronica, 0 of jazz and blues, 0 of punk, 0 of metal, 0 of classic pop and rock, 1 of classical, 0 of folk, 0 of soul and reggae, 0 of pop, 0 of hip-hop"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

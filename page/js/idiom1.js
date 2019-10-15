@@ -100,7 +100,6 @@
       svg_right.select(`.${parse_name(d.data.Name)}`)
         .style('stroke', '')
 
-      console.log(to_hide)
       svg_left.selectAll(to_hide)
         .transition()
         .duration(200)
