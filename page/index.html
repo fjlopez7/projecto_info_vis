@@ -17,16 +17,32 @@
 <body>
   <nav class="lighten-1" role="navigation">
     <div class="nav-wrapper container">
-      <span class="brand-logo">Visualización de la Información</span>
+      <span class="brand-logo">IIC2026 - Visualización de la Información</span>
       </ul>
       <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
   </nav>
   <div class="section no-pad-bot landing valign-wrapper">
     <div class="container">
-      <h1 class="header center">DecisionTree v/s RandomForest</h1>
+      <h1 class="header center">Decision Tree v/s Random Forest</h1>
       <p class="center-align">
-        Texto Introduciendo el problema
+        Dentro del ámbito del aprendizaje de máquina, se encuentran los algoritmos <i>Decision Tree</i>
+         y <i>Random forest</i>, ampliamente utilizados al momento de entrenar modelos de predicción.
+      </p>
+      <p class="center-align">
+        <b><i>Decision tree</i></b> toma un <i>dataset</i> de entrenamiento y, en base a este,
+         construye un conjunto de reglas sucesivas que permitirán categorizar los datos. Este 
+         modelo puede visualizarse como un <i>flowchart</i>, donde cada camino desde el nodo tomado
+          como raíz hasta un nodo hoja representa la serie de condiciones que un dato debe tener para 
+        poder ser clasificado en cierta categoría.
+      </p>
+      <p class="center-align">
+        Por otro lado, <i><b>Random forest</b></i> es un método de ensamble de modelos que 
+        nace como una mejora sustancial del <i>decision tree</i>. Consiste en la construcción de múltiples
+         árboles de decisión aleatorios de menor profundidad, finalmente tomando la moda de las predicciones arrojadas
+         por cada árbol del enamble como la clasificación final del <i>input</i>. Con esto, se busca reducir el
+          problema de <i>overfitting</i> que poseen los árboles de decisión.
+
       </p>
     </div>
   </div>
@@ -37,7 +53,17 @@
       <div class="row">
         <h3>Idiom 1</h3>
         <p class="center-align">
-          Este es un texto de prueba explicando el idiom
+          El primer <i>idiom</i> busca mostrar a simple vista y de forma interactiva 
+          las diferencias presentes entre las predicciones entregadas por dos modelos distintos para un 
+          mismo <i>dataset</i>. Cada nodo del gráfico representa una categoría predecida, siendo su tamaño 
+          dependiente de la cantidad de veces que dicho modelo predijo esa categoría.
+        </p>
+        <p class="center-align">
+          La interactividad se presenta en dos formas: al hacer <i>hover</i> sobre uno de los nodos, 
+          la visualización enfoca a este y a su equivalente en el otro modelo, con el fin de aislar ambos nodos
+           y facilitar la comparación entre estos. Por otro lado, al momento de hacer <i>click</i> sobre 
+           un nodo, se muestra un gráfico de barras asociado para dicha clase y modelo, donde se muestran 
+           estadísticas deseables con respecto a las predicciones dadas para dicha categoría.
         </p>
       </div>
       <div class="row">
@@ -49,8 +75,18 @@
       <div class="row">
         <h3>Idiom 2</h3>
         <p class="center-align">
-          Este es un texto de prueba explicando el idiom
+          El segundo idiom tiene un fin más didáctico, ya que busca mostrar de forma gráfica 
+          cómo funciona el proceso de clasificación en cada modelo. Para esto, se utiliza la estructura de datos más 
+          cercana, que sería un grafo de árbol con tres elementos claves: 
+          <ul>
+            <li>-Nodo raíz: donde comienza el proceso de decisión.</li>
+            <li>-Nodo intermedio: representa un criterio de decisión, junto con el valor límite de clasificación.</li>
+            <li>-Nodo hoja: representa a la clase con la que fue evaluado ell <i>input</i> que siguió el camino desde la 
+            raíz a dicho nodo,</li>
+          </ul>
         </p>
+        <p class="center-align">El árbol de decisión se muestra de forma completa, mientras que para el <i>random forest</i>,
+        al tener gran cantidad de árboles asociados, se muestran sólo un par de árboles que lo conforman.</p>
       </div>
       <div class="row">
         <div class="col s12 center-align" id="idiom2-center"></div>
