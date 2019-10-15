@@ -8,6 +8,8 @@
   const HEIGHT = 600
   const WIDTH = 1000
 
+  const RADIUS = 14
+
   // Definimos dimensiones del svg considerando margenes
   const widthSVG = WIDTH - MARGIN.RIGHT - MARGIN.LEFT;
   const heighSVG = HEIGHT - MARGIN.TOP - MARGIN.BOTTOM;
@@ -32,6 +34,9 @@
     data = tree(d3.hierarchy(dataset))
 
     const nodes = data.descendants().map(node => {
+      if (!node.children) {
+        node.is_leaf = true
+      }
       node.id = i
       i += 1
       return node
@@ -81,7 +86,7 @@
       .attr('startOffset', link => {
         if (link.source.x > link.target.x) {
           return `${2 / (link.source.height + 3) * 50}%`
-        } else { 
+        } else {
           return `${2 / (link.source.depth + 2) * 50}%`
         }
       })
@@ -90,7 +95,6 @@
         if (link.source.x < link.target.x) {
           return `${data[0]} ${data[1]} ${Number(data[2]).toFixed(2)}`
         }
-        console.log(link)
         return `${Number(data[2]).toFixed(2)} ${data[1]} ${data[0]}`
       })
 
@@ -101,17 +105,28 @@
       .enter()
       .append('circle');
 
-    node.attr('class', d => {
-      node_class = `node id-${d.id}`
-      return node_class
-    })
+    node.
+      attr('class', d => {
+        node_class = `node id-${d.id}`
+        return node_class
+      })
       .attr('r', 0)
       .attr('cx', orientation.x)
       .attr('cy', orientation.y)
       .style('fill', '#ef5350')
+      .on('mouseover', d => {
+        console.log(d)
+        if (d.is_leaf) {
+          d3
+          .select(`#idiom2-center .id-${d.id}`)
+            .transition()
+              .duration(400)  
+              .attr('r', RADIUS * 1.5)
+        }
+      })
       .transition()
       .duration(600)
-      .attr('r', 10);
+      .attr('r', RADIUS);
   }
 
 
